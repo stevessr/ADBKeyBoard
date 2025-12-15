@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.inputmethodservice.InputMethodService;
+import android.os.Build;
 import android.util.Base64;
 import android.util.Log;
 import android.view.InputDevice;
@@ -36,7 +37,11 @@ public class AdbIME extends InputMethodService {
 			filter.addAction(IME_MESSAGE_B64);
 			filter.addAction(IME_CLEAR_TEXT);
 			mReceiver = new AdbReceiver();
-			registerReceiver(mReceiver, filter);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+				registerReceiver(mReceiver, filter, Context.RECEIVER_EXPORTED);
+			} else {
+				registerReceiver(mReceiver, filter);
+			}
 		}
 
 		return mInputView;
